@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Tournament Wallchart{% endblock %}
+
+{% block content %}
+<h2 class="text-xl font-semibold mb-4 border-b pb-2">Tournament Wallchart</h2>
+
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300 text-sm">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="py-2 px-3 border border-gray-300">Rank</th>
+                <th class="py-2 px-3 border border-gray-300 text-left">Player</th>
+                <th class="py-2 px-3 border border-gray-300">Wins</th>
+                <th class="py-2 px-3 border border-gray-300">Spread</th>
+                
+                {% for i in range(1, max_rounds + 1) %}
+                <th class="py-2 px-3 border border-gray-300 text-center">R{{ i }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+            <tr class="text-center hover:bg-gray-50 border-t">
+                <td class="py-2 px-3 border border-gray-300 font-bold">{{ loop.index }}</td>
+                <td class="py-2 px-3 border border-gray-300 text-left font-medium">{{ player.name }}</td>
+                <td class="py-2 px-3 border border-gray-300">{{ player.wins }}</td>
+                <td class="py-2 px-3 border border-gray-300">{{ player.spread }}</td>
+                
+                {% for match in player.history %}
+                <td class="py-2 px-3 border border-gray-300">
+                    <div class="text-xs text-gray-500">vs #{{ match.opp_id }}</div>
+                    <div class="font-bold {% if match.result == 'W' %}text-green-600{% elif match.result == 'L' %}text-red-600{% else %}text-gray-600{% endif %}">
+                        {{ match.result }} {% if match.spread > 0 %}+{% endif %}{{ match.spread }}
+                    </div>
+                </td>
+                {% endfor %}
+                
+                {% for i in range(player.history|length, max_rounds) %}
+                <td class="py-2 px-3 border border-gray-300 bg-gray-50"></td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

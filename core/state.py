@@ -14,6 +14,10 @@ def load_players() -> list[Player]:
 
 def save_players(players: list[Player]):
     with open(STATE_FILE, 'w') as f:
-        # asdict() converts our dataclass to a dictionary perfectly
         from dataclasses import asdict
         json.dump([asdict(p) for p in players], f, indent=4)
+
+def clear_players():
+    """Wipes the tournament data clean."""
+    if os.path.exists(STATE_FILE):
+        os.remove(STATE_FILE)

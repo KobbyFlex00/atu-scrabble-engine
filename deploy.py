@@ -3,7 +3,6 @@ import boto3
 import mimetypes
 from dotenv import load_dotenv
 
-# Load credentials from the .env file
 load_dotenv()
 
 def deploy_to_s3():
@@ -15,7 +14,6 @@ def deploy_to_s3():
 
     print(f"\n🚀 Connecting to AWS S3 bucket: {bucket_name}...")
     
-    # Initialize the S3 client
     s3_client = boto3.client(
         's3',
         aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
@@ -29,13 +27,10 @@ def deploy_to_s3():
         print(f"❌ Error: {output_dir} directory does not exist. Build the site first.")
         return
 
-    # Loop through all files in the output directory
     for filename in os.listdir(output_dir):
         filepath = os.path.join(output_dir, filename)
         
-        # Skip directories
         if os.path.isfile(filepath):
-            # Guess the content type (e.g., text/html for .html files)
             content_type, _ = mimetypes.guess_type(filepath)
             content_type = content_type or 'application/octet-stream'
             
