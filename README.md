@@ -70,6 +70,3 @@ tournament.json - Local database tracking current tournament state (ignored by G
 
 🔒 Security Note
 Ensure your AWS IAM user follows the principle of least privilege, restricting access strictly to s3:PutObject for your specific tournament bucket.
-
-
-To make it even easier for other developers to set this up, would you like me to help you quickly generate a `requirements.txt` file to include in the repository alongside this README?
