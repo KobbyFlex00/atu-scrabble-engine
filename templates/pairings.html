@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Round {{ round_num }} Pairings{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-4 border-b pb-2">
+    <h2 class="text-xl font-semibold">Round {{ round_num }} Pairings</h2>
+    <span class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full">Current Round</span>
+</div>
+
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="py-2 px-4 border text-center w-16">Board</th>
+                <th class="py-2 px-4 border text-right w-2/5">Player 1</th>
+                <th class="py-2 px-4 border text-center w-1/5">vs</th>
+                <th class="py-2 px-4 border text-left w-2/5">Player 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for match in matches %}
+            <tr class="hover:bg-gray-50 border-t">
+                <td class="py-3 px-4 border text-center font-bold text-lg bg-gray-50">{{ match.board }}</td>
+                
+                <td class="py-3 px-4 border text-right">
+                    <div class="font-medium text-lg">{{ match.player1.name }}</div>
+                    <div class="text-sm text-gray-500">{{ match.player1.wins }} wins | Rating: {{ match.player1.rating }}</div>
+                </td>
+                
+                <td class="py-3 px-4 border text-center text-gray-400">vs</td>
+                
+                <td class="py-3 px-4 border text-left">
+                    {% if match.player2 %}
+                        <div class="font-medium text-lg">{{ match.player2.name }}</div>
+                        <div class="text-sm text-gray-500">{{ match.player2.wins }} wins | Rating: {{ match.player2.rating }}</div>
+                    {% else %}
+                        <div class="font-medium text-lg text-green-600">BYE</div>
+                        <div class="text-sm text-gray-500">Automatic Win</div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

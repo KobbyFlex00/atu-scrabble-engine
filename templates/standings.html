@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Current Standings{% endblock %}
+
+{% block content %}
+<h2 class="text-xl font-semibold mb-4 border-b pb-2">Division A - Standings</h2>
+
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="py-2 px-4 border">Rank</th>
+                <th class="py-2 px-4 border text-left">Player</th>
+                <th class="py-2 px-4 border text-left">Club/Uni</th>
+                <th class="py-2 px-4 border">Wins</th>
+                <th class="py-2 px-4 border">Spread</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+            <tr class="text-center hover:bg-gray-50 border-t">
+                <td class="py-2 px-4 border">{{ loop.index }}</td>
+                <td class="py-2 px-4 border text-left font-medium">{{ player.name }}</td>
+                <td class="py-2 px-4 border text-left text-gray-600">{{ player.club }}</td>
+                <td class="py-2 px-4 border">{{ player.wins }}</td>
+                <td class="py-2 px-4 border">{{ player.spread }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
