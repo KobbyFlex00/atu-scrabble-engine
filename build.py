@@ -1,13 +1,14 @@
 import os
 from jinja2 import Environment, FileSystemLoader
 from core.pairing import generate_swiss_pairings
+from core.standings import calculate_sos_and_sort, calculate_team_standings
 
 def build_static_site(players, current_round):
     env = Environment(loader=FileSystemLoader('templates'))
     os.makedirs('output', exist_ok=True)
     
-    # Sort players by wins (descending), then spread (descending)
-    sorted_players = sorted(players, key=lambda x: (x.wins, x.spread), reverse=True)
+    # Sort players by wins, then spread, then SOS
+    sorted_players = calculate_sos_and_sort(players)
     
     # 1. Generate Standings (index.html)
     standings_template = env.get_template('standings.html')
@@ -28,5 +29,12 @@ def build_static_site(players, current_round):
     wallchart_html = wallchart_template.render(players=sorted_players, max_rounds=max_rounds)
     with open(os.path.join('output', 'wallchart.html'), 'w') as f:
         f.write(wallchart_html)
+
+    # 4. Generate Team Standings (teams.html)
+    team_standings = calculate_team_standings(players)
+    teams_template = env.get_template('teams.html')
+    teams_html = teams_template.render(teams=team_standings)
+    with open(os.path.join('output', 'teams.html'), 'w') as f:
+        f.write(teams_html)
         
     print(f"\n✅ Build complete! Static files for Round {current_round} updated in output/ directory.")

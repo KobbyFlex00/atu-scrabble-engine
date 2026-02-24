@@ -14,6 +14,7 @@
                 <th class="py-2 px-4 border text-left">Club/Uni</th>
                 <th class="py-2 px-4 border">Wins</th>
                 <th class="py-2 px-4 border">Spread</th>
+                <th class="py-2 px-4 border text-blue-800 bg-blue-50">SOS</th>
             </tr>
         </thead>
         <tbody>
@@ -24,6 +25,7 @@
                 <td class="py-2 px-4 border text-left text-gray-600">{{ player.club }}</td>
                 <td class="py-2 px-4 border">{{ player.wins }}</td>
                 <td class="py-2 px-4 border">{{ player.spread }}</td>
+                <td class="py-2 px-4 border font-semibold text-blue-800 bg-blue-50">{{ player.sos }}</td>
             </tr>
             {% endfor %}
         </tbody>

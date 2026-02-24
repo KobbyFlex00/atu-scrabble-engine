@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Team Standings{% endblock %}
+
+{% block content %}
+<h2 class="text-xl font-semibold mb-4 border-b pb-2">Team / University Standings</h2>
+
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-300">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="py-2 px-4 border w-16">Rank</th>
+                <th class="py-2 px-4 border text-left">Team Name</th>
+                <th class="py-2 px-4 border text-center">Players</th>
+                <th class="py-2 px-4 border text-center">Total Wins</th>
+                <th class="py-2 px-4 border text-center">Total Spread</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <tr class="text-center hover:bg-gray-50 border-t">
+                <td class="py-3 px-4 border font-bold">{{ loop.index }}</td>
+                <td class="py-3 px-4 border text-left font-medium text-lg text-blue-900">{{ team.name }}</td>
+                <td class="py-3 px-4 border text-gray-600">{{ team.player_count }}</td>
+                <td class="py-3 px-4 border font-semibold">{{ team.total_wins }}</td>
+                <td class="py-3 px-4 border">{{ team.total_spread }}</td>
+            </tr>
+            {% endfor %}
+            
+            {% if not teams %}
+            <tr>
+                <td colspan="5" class="py-4 text-center text-gray-500">No team data available yet.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

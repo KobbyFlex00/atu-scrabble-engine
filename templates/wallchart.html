@@ -13,6 +13,7 @@
                 <th class="py-2 px-3 border border-gray-300 text-left">Player</th>
                 <th class="py-2 px-3 border border-gray-300">Wins</th>
                 <th class="py-2 px-3 border border-gray-300">Spread</th>
+                <th class="py-2 px-3 border border-gray-300 bg-blue-50 text-blue-800">SOS</th>
                 
                 {% for i in range(1, max_rounds + 1) %}
                 <th class="py-2 px-3 border border-gray-300 text-center">R{{ i }}</th>
@@ -26,6 +27,7 @@
                 <td class="py-2 px-3 border border-gray-300 text-left font-medium">{{ player.name }}</td>
                 <td class="py-2 px-3 border border-gray-300">{{ player.wins }}</td>
                 <td class="py-2 px-3 border border-gray-300">{{ player.spread }}</td>
+                <td class="py-2 px-3 border border-gray-300 bg-blue-50 text-blue-800 font-semibold">{{ player.sos }}</td>
                 
                 {% for match in player.history %}
                 <td class="py-2 px-3 border border-gray-300">
