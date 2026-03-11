@@ -1,0 +1,86 @@
+[
+    {
+        "id": 1,
+        "name": "George",
+        "club": "ATU",
+        "rating": 0,
+        "wins": 1.0,
+        "spread": 201,
+        "sos": 0.0,
+        "played_against": [
+            4
+        ],
+        "history": [
+            {
+                "opp_id": 4,
+                "opp_name": "Stephen",
+                "result": "W",
+                "spread": 201
+            }
+        ],
+        "has_had_bye": false
+    },
+    {
+        "id": 2,
+        "name": "Aquila",
+        "club": "ATU",
+        "rating": 0,
+        "wins": 1.0,
+        "spread": 78,
+        "sos": 0.0,
+        "played_against": [
+            3
+        ],
+        "history": [
+            {
+                "opp_id": 3,
+                "opp_name": "Perpetual",
+                "result": "W",
+                "spread": 78
+            }
+        ],
+        "has_had_bye": false
+    },
+    {
+        "id": 3,
+        "name": "Perpetual",
+        "club": "ATU",
+        "rating": 0,
+        "wins": 0.0,
+        "spread": -78,
+        "sos": 0.0,
+        "played_against": [
+            2
+        ],
+        "history": [
+            {
+                "opp_id": 2,
+                "opp_name": "Aquila",
+                "result": "L",
+                "spread": -78
+            }
+        ],
+        "has_had_bye": false
+    },
+    {
+        "id": 4,
+        "name": "Stephen",
+        "club": "ATU",
+        "rating": 0,
+        "wins": 0.0,
+        "spread": -201,
+        "sos": 0.0,
+        "played_against": [
+            1
+        ],
+        "history": [
+            {
+                "opp_id": 1,
+                "opp_name": "George",
+                "result": "L",
+                "spread": -201
+            }
+        ],
+        "has_had_bye": false
+    }
+]
