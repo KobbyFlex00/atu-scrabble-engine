@@ -1,5 +1,5 @@
 import os
-from core.state import load_players, save_players, clear_players, DATA_DIR
+from core.state import load_players, save_players, clear_players, rename_tournament, delete_tournament, DATA_DIR
 from core.models import Player
 from build import build_static_site, build_master_portal
 from core.deploy import deploy_to_s3, deploy_master_portal
@@ -155,6 +155,51 @@ def tournament_menu(tournament_name):
         elif choice == '5':
             break
 
+# --- NEW MENU FOR RENAMING/DELETING ENTIRE TOURNAMENTS ---
+def manage_tournaments_menu(tournaments):
+    while True:
+        print("\n--- ⚙️ MANAGE TOURNAMENTS (RENAME/DELETE) ---")
+        if not tournaments:
+            print("No tournaments available to manage.")
+            break
+            
+        for i, name in enumerate(tournaments):
+            print(f"{i+1}. {name}")
+        print("0. Back to Main Menu")
+        
+        choice = input("\nSelect a tournament to manage: ")
+        
+        if choice == '0':
+            break
+            
+        try:
+            idx = int(choice) - 1
+            if 0 <= idx < len(tournaments):
+                target = tournaments[idx]
+                print(f"\nManaging: {target}")
+                print("1. Rename Tournament")
+                print("2. Delete Tournament")
+                print("0. Cancel")
+                
+                action = input("Select action: ")
+                
+                if action == '1':
+                    new_name = input(f"Enter new name for '{target}': ")
+                    if new_name and new_name.lower() != target.lower():
+                        if rename_tournament(target, new_name):
+                            print(f"✅ Tournament renamed to '{new_name}'.")
+                            tournaments[idx] = new_name # Update the list
+                        else:
+                            print("❌ Failed to rename tournament.")
+                elif action == '2':
+                    confirm = input(f"⚠️ ARE YOU SURE you want to permanently delete '{target}'? (y/n): ")
+                    if confirm.lower() == 'y':
+                        delete_tournament(target)
+                        print(f"✅ Tournament '{target}' deleted.")
+                        return # Exit to main menu to refresh the list cleanly
+        except ValueError:
+            pass
+
 def main():
     while True:
         print("\n=== ATU SCRABBLE ENGINE ===")
@@ -169,6 +214,7 @@ def main():
             print("1. Create New Tournament")
             
         print("--------------------------------")
+        print("M. Manage Tournaments (Rename/Delete)")
         print("P. Update & Deploy Master Portal")
         print("0. Exit Engine")
         
@@ -177,6 +223,10 @@ def main():
         if choice == '0':
             print("Shutting down...")
             break
+            
+        if choice == 'M':
+            manage_tournaments_menu(existing)
+            continue
             
         if choice == 'P':
             build_master_portal(existing)
