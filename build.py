@@ -1,12 +1,11 @@
 import os
 from jinja2 import Environment, FileSystemLoader
-from core.pairing import generate_swiss_pairings
+from core.pairing import generate_swiss_pairings, generate_round_robin_pairings
 from core.standings import calculate_sos_and_sort, calculate_team_standings
 
-def build_static_site(players, current_round, tournament_name):
+def build_static_site(players, current_round, tournament_name, pairing_system="swiss"):
     env = Environment(loader=FileSystemLoader('templates'))
     
-    # Create a specific output folder for this tournament
     safe_name = tournament_name.replace(" ", "_").lower()
     out_dir = os.path.join('output', safe_name)
     os.makedirs(out_dir, exist_ok=True)
@@ -19,8 +18,12 @@ def build_static_site(players, current_round, tournament_name):
     with open(os.path.join(out_dir, 'index.html'), 'w') as f:
         f.write(standings_html)
 
-    # 2. Generate Pairings
-    round_pairings = generate_swiss_pairings(players, round_num=current_round)
+    # 2. Generate Pairings based on the chosen system
+    if pairing_system == "rr":
+        round_pairings = generate_round_robin_pairings(players, round_num=current_round)
+    else:
+        round_pairings = generate_swiss_pairings(players, round_num=current_round)
+        
     pairings_template = env.get_template('pairings.html')
     pairings_html = pairings_template.render(matches=round_pairings, round_num=current_round, tournament_name=tournament_name)
     with open(os.path.join(out_dir, 'pairings.html'), 'w') as f:
@@ -58,7 +61,6 @@ def build_master_portal(tournament_names):
     template = env.get_template('portal.html')
     html = template.render(tournaments=tournaments)
     
-    # Save this to the root of the output directory
     with open(os.path.join('output', 'index.html'), 'w') as f:
         f.write(html)
         

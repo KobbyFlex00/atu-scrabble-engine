@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "name": "Aquila Delali",
+        "club": "ATU",
+        "rating": 0,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    },
+    {
+        "id": 2,
+        "name": "Perpetual Dotse",
+        "club": "ATU",
+        "rating": 0,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    },
+    {
+        "id": 3,
+        "name": "George Osae",
+        "club": "ATU",
+        "rating": 0,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    },
+    {
+        "id": 4,
+        "name": "Stephen Appiah",
+        "club": "ATU",
+        "rating": 0,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    }
+]

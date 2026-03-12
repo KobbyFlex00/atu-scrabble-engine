@@ -134,12 +134,23 @@ def tournament_menu(tournament_name):
 
         elif choice == '4':
             if not players: continue
-            round_num = int(input("Generating pairings for round #: "))
-            build_static_site(players, round_num, tournament_name)
-            
-            deploy = input("\nDeploy to AWS S3? (y/n): ").lower()
-            if deploy == 'y':
-                deploy_to_s3(tournament_name)
+            try:
+                round_num = int(input("Generating pairings for round #: "))
+                
+                print("\nSelect Pairing System:")
+                print("1. Round Robin (Perfect rotation, no repeats)")
+                print("2. Swiss System (Rank-based, King of the Hill)")
+                sys_choice = input("Choice (1/2): ")
+                
+                pairing_sys = "rr" if sys_choice == '1' else "swiss"
+                
+                build_static_site(players, round_num, tournament_name, pairing_system=pairing_sys)
+                
+                deploy = input("\nDeploy to AWS S3? (y/n): ").lower()
+                if deploy == 'y':
+                    deploy_to_s3(tournament_name)
+            except ValueError:
+                print("❌ Invalid input. Use numbers.")
                 
         elif choice == '5':
             break
@@ -186,4 +197,4 @@ def main():
             pass
 
 if __name__ == "__main__":
-    main()
+    main()5
