@@ -1,6 +1,6 @@
 import os
 from jinja2 import Environment, FileSystemLoader
-from core.pairing import generate_swiss_pairings, generate_round_robin_pairings
+from core.pairing import generate_swiss_pairings, generate_round_robin_pairings, generate_koh_pairings
 from core.standings import calculate_sos_and_sort, calculate_team_standings
 
 def build_static_site(players, current_round, tournament_name, pairing_system="swiss"):
@@ -21,6 +21,8 @@ def build_static_site(players, current_round, tournament_name, pairing_system="s
     # 2. Generate Pairings based on the chosen system
     if pairing_system == "rr":
         round_pairings = generate_round_robin_pairings(players, round_num=current_round)
+    elif pairing_system == "koh":
+        round_pairings = generate_koh_pairings(players, round_num=current_round)
     else:
         round_pairings = generate_swiss_pairings(players, round_num=current_round)
         

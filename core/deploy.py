@@ -1,9 +1,43 @@
 import os
+import time
 import boto3
 import mimetypes
 from dotenv import load_dotenv
 
 load_dotenv()
+
+def invalidate_cloudfront():
+    """Creates an invalidation in CloudFront to clear the cache instantly."""
+    dist_id = os.getenv('CLOUDFRONT_DIST_ID')
+    if not dist_id:
+        print("⚠️ Notice: CLOUDFRONT_DIST_ID not set in .env. Skipping cache invalidation.")
+        return
+
+    print("🔄 Clearing CloudFront cache so updates appear instantly for players...")
+    try:
+        cf_client = boto3.client(
+            'cloudfront',
+            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+            region_name=os.getenv('AWS_REGION')
+        )
+        
+        # CloudFront requires a unique caller reference for every invalidation request
+        unique_reference = str(time.time())
+        
+        response = cf_client.create_invalidation(
+            DistributionId=dist_id,
+            InvalidationBatch={
+                'Paths': {
+                    'Quantity': 1,
+                    'Items': ['/*']
+                },
+                'CallerReference': unique_reference
+            }
+        )
+        print("✅ CloudFront cache successfully cleared!")
+    except Exception as e:
+        print(f"❌ Failed to clear CloudFront cache: {e}")
 
 def deploy_to_s3(tournament_name):
     bucket_name = os.getenv('S3_BUCKET_NAME')
@@ -47,7 +81,10 @@ def deploy_to_s3(tournament_name):
             except Exception as e:
                 print(f"❌ Failed to upload {filename}: {e}")
                 
-    print(f"✅ Deployment complete! {tournament_name} is live.")
+    print(f"✅ S3 Deployment complete for {tournament_name}!")
+    
+    # Trigger the cache clear immediately after uploading
+    invalidate_cloudfront()
 
 def deploy_master_portal():
     """Pushes the root index.html to the base of the S3 Bucket."""
@@ -71,6 +108,9 @@ def deploy_master_portal():
                 'index.html',
                 ExtraArgs={'ContentType': 'text/html'}
             )
-            print("✅ Master Portal is live!")
+            print("✅ Master Portal uploaded to S3!")
+            
+            # Trigger the cache clear immediately after uploading
+            invalidate_cloudfront()
         except Exception as e:
             print(f"❌ Failed to upload Master Portal: {e}")

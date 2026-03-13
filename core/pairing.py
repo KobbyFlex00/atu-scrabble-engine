@@ -50,18 +50,13 @@ def generate_swiss_pairings(players: list[Player], round_num: int) -> list[Match
     return pairings
 
 def generate_round_robin_pairings(players: list[Player], round_num: int) -> list[Match]:
-    """Generates perfect Round Robin pairings using the Circle Method."""
-    # Sort by ID so the rotation is consistent across different rounds
     fixed_players = sorted(players, key=lambda p: p.id)
     
-    # If odd number of players, add a dummy player to represent the BYE
     if len(fixed_players) % 2 != 0:
         dummy = Player(id=0, name="BYE", club="", rating=0)
         fixed_players.append(dummy)
         
     n = len(fixed_players)
-    
-    # The Circle Method shifts the array by 1 position every round (excluding the first player)
     shift = (round_num - 1) % (n - 1)
     rotated_players = [fixed_players[0]] + fixed_players[1+shift:] + fixed_players[1:1+shift]
     
@@ -72,7 +67,6 @@ def generate_round_robin_pairings(players: list[Player], round_num: int) -> list
         p1 = rotated_players[i]
         p2 = rotated_players[n - 1 - i]
         
-        # If one of the players is the dummy, the other gets a BYE
         if p1.id == 0:
             pairings.append(Match(round_num, p2, None, board))
         elif p2.id == 0:
@@ -82,11 +76,45 @@ def generate_round_robin_pairings(players: list[Player], round_num: int) -> list
             
         board += 1
             
-    # Move the BYE match to the bottom of the table
     pairings.sort(key=lambda m: 1 if m.player2 is None else 0)
-    
-    # Clean up board numbers
     for idx, match in enumerate(pairings):
         match.board = idx + 1
         
+    return pairings
+
+# --- NEW KING OF THE HILL FUNCTION ---
+def generate_koh_pairings(players: list[Player], round_num: int) -> list[Match]:
+    """Generates strict 1v2, 3v4 pairings based on current standings, ignoring previous history."""
+    sorted_players = calculate_sos_and_sort(players)
+    pairings = []
+    paired_ids = set()
+    board = 1
+    
+    # 1. Handle the BYE first if odd number of players
+    if len(sorted_players) % 2 != 0:
+        bye_player = None
+        for p in reversed(sorted_players):
+            if not p.has_had_bye:
+                bye_player = p
+                break
+                
+        if not bye_player:
+            bye_player = sorted_players[-1]
+            
+        last_board = (len(sorted_players) // 2) + 1
+        pairings.append(Match(round_num, bye_player, None, last_board))
+        paired_ids.add(bye_player.id)
+        
+        # Remove the bye player from the active pool for this round
+        sorted_players = [p for p in sorted_players if p.id != bye_player.id]
+
+    # 2. Strict positional pairing (0 vs 1, 2 vs 3, etc.)
+    for i in range(0, len(sorted_players), 2):
+        if i + 1 < len(sorted_players):
+            p1 = sorted_players[i]
+            p2 = sorted_players[i+1]
+            pairings.append(Match(round_num, p1, p2, board))
+            board += 1
+
+    pairings.sort(key=lambda x: x.board)
     return pairings

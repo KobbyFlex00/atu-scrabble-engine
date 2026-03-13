@@ -10,13 +10,219 @@ def list_tournaments():
     files = os.listdir(DATA_DIR)
     return [f.replace('.json', '').replace('_', ' ').title() for f in files if f.endswith('.json')]
 
+def view_and_edit_rounds(players, tournament_name):
+    try:
+        max_round = max((len(p.history) for p in players), default=0)
+        
+        highest_allowed = max_round + 1
+
+        print(f"\nAvailable Rounds: 1 to {highest_allowed} (Select {highest_allowed} to manually build a new round)")
+        round_num = int(input("Enter round number to view/edit: "))
+
+        if not (1 <= round_num <= highest_allowed):
+            print("❌ Invalid round number.")
+            return
+
+        round_idx = round_num - 1
+        processed_ids = set()
+        matches_display = []
+
+        for p in players:
+            if p.id in processed_ids:
+                continue
+            if len(p.history) > round_idx:
+                match_data = p.history[round_idx]
+                opp_id = match_data['opp_id']
+
+                if opp_id == 0:
+                    matches_display.append({'p1': p, 'p2': None, 'spread': match_data['spread'], 'p1_res': match_data['result']})
+                    processed_ids.add(p.id)
+                else:
+                    opp = next((o for o in players if o.id == opp_id), None)
+                    if opp:
+                        matches_display.append({'p1': p, 'p2': opp, 'spread': match_data['spread'], 'p1_res': match_data['result']})
+                        processed_ids.add(p.id)
+                        processed_ids.add(opp_id)
+
+        print(f"\n--- 📅 ROUND {round_num} MATCHES ---")
+        if not matches_display:
+            print("No matches recorded for this round yet.")
+        else:
+            for i, m in enumerate(matches_display):
+                if m['p2'] is None:
+                    print(f"{i+1}. {m['p1'].name} has a BYE (+{m['spread']})")
+                else:
+                    p1_name = m['p1'].name
+                    p2_name = m['p2'].name
+                    p1_res = m['p1_res']
+                    p2_res = 'W' if p1_res == 'L' else ('L' if p1_res == 'W' else 'D')
+                    spread = m['spread']
+                    print(f"{i+1}. {p1_name} ({p1_res}) vs {p2_name} ({p2_res}) | Spread for {p1_name}: {spread}")
+
+        print("\nOptions:")
+        print("1. Edit an existing match score")
+        print("2. Change players in a match (Fix wrong pairing)")
+        print("3. Add a missing match to this round")
+        print("4. Delete a match from this round")
+        print("0. Go back")
+        choice = input("Select: ")
+
+        if choice == '1':
+            if not matches_display:
+                print("❌ No matches to edit.")
+                return
+            match_idx = int(input("\nEnter the match number to edit: ")) - 1
+            if 0 <= match_idx < len(matches_display):
+                selected = matches_display[match_idx]
+                if selected['p2'] is None:
+                    print("❌ Cannot edit a BYE from this menu. Use Option 4 to delete it.")
+                    return
+
+                p1 = selected['p1']
+                p2 = selected['p2']
+
+                print(f"\n--- ✏️ EDITING: {p1.name} vs {p2.name} ---")
+                new_res = input(f"Did {p1.name} Win, Lose, or Draw? (W/L/D): ").upper()
+                if new_res not in ['W', 'L', 'D']:
+                    print("❌ Invalid result. Use W, L, or D.")
+                    return
+
+                new_spread = int(input(f"Enter the new spread for {p1.name} (e.g., if they lost by 20, enter -20): "))
+
+                if p1.edit_result(p2.id, new_res, new_spread):
+                    p2_res = 'W' if new_res == 'L' else ('L' if new_res == 'W' else 'D')
+                    p2.edit_result(p1.id, p2_res, -new_spread)
+                    save_players(players, tournament_name)
+                    print("✅ Match successfully updated! (Remember to Generate & Deploy to see changes on the site)")
+                else:
+                    print("❌ Failed to find match in history.")
+            else:
+                print("❌ Invalid match number.")
+                
+        elif choice == '2':
+            if not matches_display:
+                print("❌ No matches to edit.")
+                return
+            match_idx = int(input("\nEnter the match number with the wrong pairing: ")) - 1
+            if 0 <= match_idx < len(matches_display):
+                selected = matches_display[match_idx]
+                old_p1 = selected['p1']
+                old_p2 = selected['p2']
+
+                print(f"\n--- 🔄 REPLACING PAIRING: {old_p1.name} vs {'BYE' if old_p2 is None else old_p2.name} ---")
+                
+                if old_p2 is None:
+                    old_p1.remove_result(0)
+                else:
+                    old_p1.remove_result(old_p2.id)
+                    old_p2.remove_result(old_p1.id)
+
+                print("\nEnter the CORRECT pairing details:")
+                print("Tip: Enter '0' for losing ID to score a BYE.")
+                try:
+                    new_p1_id = int(input("Winning player ID: "))
+                    new_p2_id = int(input("Losing player ID: "))
+                    
+                    if new_p2_id == 0:
+                        new_p1 = next((p for p in players if p.id == new_p1_id), None)
+                        if new_p1:
+                            new_p1.insert_bye(round_idx)
+                            save_players(players, tournament_name)
+                            print(f"✅ Replaced with a BYE for {new_p1.name} in Round {round_num}.")
+                        else:
+                            print("❌ Player not found. (Old match was deleted, please add new match using Option 3).")
+                            save_players(players, tournament_name)
+                    else:
+                        spread = int(input("Positive spread (e.g., 50): "))
+                        new_p1 = next((p for p in players if p.id == new_p1_id), None)
+                        new_p2 = next((p for p in players if p.id == new_p2_id), None)
+                        
+                        if new_p1 and new_p2:
+                            new_p1.insert_result(round_idx, new_p2.id, new_p2.name, True, False, spread)
+                            new_p2.insert_result(round_idx, new_p1.id, new_p1.name, False, False, -spread)
+                            save_players(players, tournament_name)
+                            print(f"✅ Pairing successfully changed to {new_p1.name} vs {new_p2.name}!")
+                        else:
+                            print("❌ One or both players not found. (Old match was deleted, please add new match using Option 3).")
+                            save_players(players, tournament_name)
+                except ValueError:
+                    print("❌ Invalid input. (Old match was deleted, please add new match manually using Option 3).")
+                    save_players(players, tournament_name)
+            else:
+                print("❌ Invalid match number.")
+
+        elif choice == '3':
+            print(f"\n--- ➕ ADD MISSING MATCH TO ROUND {round_num} ---")
+            print("Tip: Enter '0' for losing ID to score a BYE.")
+            try:
+                p1_id = int(input("Winning player ID: "))
+                p2_id = int(input("Losing player ID: "))
+                
+                if p2_id == 0:
+                    p1 = next((p for p in players if p.id == p1_id), None)
+                    if p1:
+                        p1.insert_bye(round_idx)
+                        save_players(players, tournament_name)
+                        print(f"✅ BYE inserted into Round {round_num} for {p1.name}.")
+                    else:
+                        print("❌ Player not found.")
+                else:
+                    spread = int(input("Positive spread (e.g., 50): "))
+                    p1 = next((p for p in players if p.id == p1_id), None)
+                    p2 = next((p for p in players if p.id == p2_id), None)
+                    
+                    if p1 and p2:
+                        p1.insert_result(round_idx, p2.id, p2.name, True, False, spread)
+                        p2.insert_result(round_idx, p1.id, p1.name, False, False, -spread)
+                        save_players(players, tournament_name)
+                        print(f"✅ {p1.name} beat {p2.name} by {spread} (Inserted perfectly at Round {round_num}).")
+                    else:
+                        print("❌ One or both players not found.")
+            except ValueError:
+                print("❌ Invalid input. Use numbers.")
+
+        elif choice == '4':
+            if not matches_display:
+                print("❌ No matches to delete.")
+                return
+            match_idx = int(input("\nEnter the match number to delete: ")) - 1
+            if 0 <= match_idx < len(matches_display):
+                selected = matches_display[match_idx]
+                p1 = selected['p1']
+                p2 = selected['p2']
+
+                if p2 is None:
+                    confirm = input(f"Are you sure you want to delete the BYE for {p1.name}? (y/n): ")
+                    if confirm.lower() == 'y':
+                        if p1.remove_result(0):
+                            save_players(players, tournament_name)
+                            print("✅ BYE successfully deleted!")
+                        else:
+                            print("❌ Failed to find BYE in history.")
+                else:
+                    confirm = input(f"Are you sure you want to completely delete the match: {p1.name} vs {p2.name}? (y/n): ")
+                    if confirm.lower() == 'y':
+                        if p1.remove_result(p2.id):
+                            p2.remove_result(p1.id)
+                            save_players(players, tournament_name)
+                            print("✅ Match successfully deleted! (You can re-add it using Option 3 if needed)")
+                        else:
+                            print("❌ Failed to find match in history.")
+            else:
+                print("❌ Invalid match number.")
+
+    except ValueError:
+        print("❌ Invalid input. Please enter numbers where required.")
+
+
 def crud_menu(players, tournament_name):
     while True:
         print(f"\n--- 🛠️ MANAGE DATA (CRUD) - {tournament_name} ---")
         print("1. Edit Player Details (Name, Club, Rating)")
-        print("2. Undo/Delete a Match Result")
-        print("3. Delete a Player entirely")
-        print("4. Back to Main Menu")
+        print("2. View & Edit Matches by Round")
+        print("3. Undo/Delete a Match Result")
+        print("4. Delete a Player entirely")
+        print("5. Back to Tournament Menu")
         
         choice = input("Select: ")
         
@@ -39,6 +245,9 @@ def crud_menu(players, tournament_name):
                 print("❌ Player not found.")
                 
         elif choice == '2':
+            view_and_edit_rounds(players, tournament_name)
+
+        elif choice == '3':
             for p in players: print(f"[{p.id}] {p.name}")
             p1_id = int(input("\nEnter Player ID to modify: "))
             player1 = next((p for p in players if p.id == p1_id), None)
@@ -60,7 +269,7 @@ def crud_menu(players, tournament_name):
                 else:
                     print("❌ Match not found in history.")
             
-        elif choice == '3':
+        elif choice == '4':
             for p in players: print(f"[{p.id}] {p.name}")
             p_id = int(input("\nEnter Player ID to DELETE: "))
             player = next((p for p in players if p.id == p_id), None)
@@ -71,7 +280,7 @@ def crud_menu(players, tournament_name):
                     save_players(players, tournament_name)
                     print("✅ Player deleted.")
             
-        elif choice == '4':
+        elif choice == '5':
             break
 
 def tournament_menu(tournament_name):
@@ -81,7 +290,7 @@ def tournament_menu(tournament_name):
         print(f"\n=== 🏆 {tournament_name.upper()} MENU ===")
         print("1. Add a Player")
         print("2. Enter Match Result")
-        print("3. Manage Data (Edit / Delete / Undo)")
+        print("3. Manage Data & Edit Rounds")
         print("4. Generate HTML & Deploy to Web")
         print("5. Exit to Tournament Selector")
         
@@ -139,10 +348,16 @@ def tournament_menu(tournament_name):
                 
                 print("\nSelect Pairing System:")
                 print("1. Round Robin (Perfect rotation, no repeats)")
-                print("2. Swiss System (Rank-based, King of the Hill)")
-                sys_choice = input("Choice (1/2): ")
+                print("2. Swiss System (Rank-based, avoids repeats)")
+                print("3. King of the Hill (Strict 1v2, 3v4 - ignores repeats)")
+                sys_choice = input("Choice (1/2/3): ")
                 
-                pairing_sys = "rr" if sys_choice == '1' else "swiss"
+                if sys_choice == '1':
+                    pairing_sys = "rr"
+                elif sys_choice == '3':
+                    pairing_sys = "koh"
+                else:
+                    pairing_sys = "swiss"
                 
                 build_static_site(players, round_num, tournament_name, pairing_system=pairing_sys)
                 
@@ -155,7 +370,6 @@ def tournament_menu(tournament_name):
         elif choice == '5':
             break
 
-# --- NEW MENU FOR RENAMING/DELETING ENTIRE TOURNAMENTS ---
 def manage_tournaments_menu(tournaments):
     while True:
         print("\n--- ⚙️ MANAGE TOURNAMENTS (RENAME/DELETE) ---")
@@ -188,7 +402,7 @@ def manage_tournaments_menu(tournaments):
                     if new_name and new_name.lower() != target.lower():
                         if rename_tournament(target, new_name):
                             print(f"✅ Tournament renamed to '{new_name}'.")
-                            tournaments[idx] = new_name # Update the list
+                            tournaments[idx] = new_name
                         else:
                             print("❌ Failed to rename tournament.")
                 elif action == '2':
@@ -196,7 +410,7 @@ def manage_tournaments_menu(tournaments):
                     if confirm.lower() == 'y':
                         delete_tournament(target)
                         print(f"✅ Tournament '{target}' deleted.")
-                        return # Exit to main menu to refresh the list cleanly
+                        return 
         except ValueError:
             pass
 
