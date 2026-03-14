@@ -1,72 +1,80 @@
-# ATU Scrabble Tournament Engine 🏆
+# 🏆 ATU Scrabble Tournament Engine
 
-A lightweight, blazing-fast tournament management system and static site generator designed for the ATU Scrabble Club and inter-university competitions. 
+A robust, fully-featured Scrabble Tournament Management System built for the Accra Technical University (ATU) Scrabble Club. This engine handles everything from live score entry and dynamic Elo rating calculations to automated pairing generation and one-click deployment to AWS.
 
-Built as a modern alternative to legacy tools like `tsh`, this engine handles player registrations, Swiss-system pairings, complex tie-breakers, and automatically deploys lightning-fast static HTML standings directly to the web via AWS S3.
+Built by **George Kobby Osae (Kobby Flex)**.
 
-## ✨ Features
+## ✨ Core Features
 
-* **Swiss System Pairings:** Automatically matches players with similar records while avoiding repeat matchups.
-* **Smart Byes:** Elegantly handles odd numbers of players by assigning a +50 Bye to the lowest-ranked eligible player.
-* **Advanced Tie-Breakers:** Uses the official Scrabble **SOS (Sum of Opponents' Scores)** to accurately rank players with identical wins and spreads.
-* **Team Aggregation:** Automatically groups players by their University/Club (e.g., ATU, UG, KNUST) to generate live Team Standings.
-* **Cross-Table Wallcharts:** Generates a beautiful round-by-round history view for every player.
-* **Cloud-Native Deployment:** Pushes static HTML directly to an AWS S3 bucket for instant, crash-proof loading when hundreds of players refresh their phones simultaneously.
+### 🛠️ TD Web Dashboard (Flask)
+A modern, intuitive web-based Control Center for Tournament Directors to manage events in real-time.
+* **Standard Score Entry:** Rapidly append match results as they come in.
+* **Insert Missing Matches:** Securely wedge forgotten matches back into their correct historical round.
+* **Surgical Match Editing:** Fix mismatches, edit scores, or delete corrupted records without breaking the tournament timeline.
+* **Automated Math Syncing:** The engine dynamically recalculates Wins, Spread, SOS (Sum of Opponents' Scores), and Elo Ratings (Base 1200) from scratch to prevent "Ghost Points."
 
-## 🛠️ Tech Stack
-* **Core Logic:** Python 3
-* **Templating:** Jinja2
-* **Styling:** Tailwind CSS (via CDN)
-* **Cloud Hosting:** Amazon S3 (`boto3`)
+### 🎲 Advanced Pairing Algorithms
+Generate the next round of pairings with a single click based on your preferred format:
+* **Swiss System:** Rank-based pairings that actively prevent repeat matchups.
+* **Round Robin:** Perfect rotational pairings for smaller groups.
+* **King of the Hill (KOTH):** Strict 1v2, 3v4 pairings for high-stakes final rounds.
+
+### 🌐 Automated Static Site Generation & Deployment
+The engine automatically compiles the tournament data into a beautiful, mobile-responsive static website and pushes it live to AWS S3/CloudFront. The generated site includes:
+* **Master Portal:** A lobby linking to all active/past tournaments.
+* **Live Standings:** Real-time leaderboard with Wins, Spread, SOS, and Elo ratings.
+* **Round Pairings:** Clean, easy-to-read board assignments.
+* **Tournament Wallchart:** A professional grid showing everyone's round-by-round trajectory.
+* **Player Profiles:** Clickable, individual stat cards showing a player's exact match history and opponent breakdown.
+* **Team Standings:** Aggregated scores based on club/university affiliation.
 
 ## 🚀 Getting Started
 
-### 1. Prerequisites
-You will need Python installed on your machine and an AWS Account with an S3 Bucket configured for Static Website Hosting.
+### Prerequisites
+* Python 3.8+
+* AWS CLI configured with your S3 credentials
+* Required Python packages: `flask`, `jinja2`, `boto3`
 
-### 2. Installation
-Clone this repository and set up your virtual environment:
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/KobbyFlex00/atu-scrabble-engine.git](https://github.com/KobbyFlex00/atu-scrabble-engine.git)
+   cd atu-scrabble-engine
 
-```bash
-git clone [https://github.com/yourusername/atu-scrabble-engine.git](https://github.com/yourusername/atu-scrabble-engine.git)
-cd atu-scrabble-engine
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install jinja2 boto3 python-dotenv
-3. Environment Variables
-Create a .env file in the root directory. Never commit this file to version control.
-
-Code snippet
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-AWS_REGION=us-east-1
-S3_BUCKET_NAME=your-bucket-name
-🎮 Running the Tournament
-To start managing a tournament, run the Command Line Interface (CLI):
+Install the required dependencies:
 
 Bash
-python cli.py
-The CLI Menu:
-Add a Player: Register a player's name, club/university, and initial rating.
+pip install -r requirements.txt
 
-Enter Match Result: Input the winning ID, losing ID, and point spread. (To score a BYE, enter 0 for the losing ID).
+Usage
+Start the local Tournament Director Web Dashboard:
 
-Generate HTML & Deploy: Compiles the current standings, generates the next round's pairings, builds the HTML, and optionally pushes everything live to AWS S3.
+Bash
+python app.py
 
-Reset Tournament: Wipes the local tournament.json state clean to prepare for a brand new event.
+Then, open your web browser and navigate to http://127.0.0.1:5000 to access the Control Center.
 
-📁 Project Structure
-/core - The brains of the operation. Contains data models, pairing algorithms, sorting logic, and deployment scripts.
+(Note: The original CLI version is still available by running python cli.py if a terminal environment is preferred).
 
-/templates - Jinja2 HTML templates styled with Tailwind CSS.
+📂 Project Structure
+app.py: The Flask web server and routing logic for the TD Dashboard.
 
-/output - The locally generated static HTML files (ignored by Git).
+core/models.py: The fundamental data structures (Players, Matches) and surgical math logic.
 
-cli.py - The interactive terminal menu for the Tournament Director.
+core/standings.py: Calculates Elo ratings and sorts the leaderboards.
 
-build.py - The static-site generation script.
+core/pairing.py: The algorithms for Swiss, Round Robin, and KOTH pairings.
 
-tournament.json - Local database tracking current tournament state (ignored by Git).
+core/state.py: Handles JSON database loading/saving.
 
-🔒 Security Note
-Ensure your AWS IAM user follows the principle of least privilege, restricting access strictly to s3:PutObject for your specific tournament bucket.
+build.py: Jinja2 static HTML site compiler.
+
+core/deploy.py: Boto3 script for syncing the output/ folder to AWS S3.
+
+templates/: HTML/CSS templates for both the live site and the TD Dashboard.
+
+data/: Local JSON database storage for tournaments.
+
+👨‍💻 Author
+George Kobby Osae, General Secretary (2025/26), ATU Scrabble Club
+```
