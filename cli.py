@@ -1,4 +1,5 @@
 import os
+import traceback
 from core.state import load_players, save_players, clear_players, rename_tournament, delete_tournament, DATA_DIR
 from core.models import Player
 from build import build_static_site, build_master_portal
@@ -13,7 +14,6 @@ def list_tournaments():
 def view_and_edit_rounds(players, tournament_name):
     try:
         max_round = max((len(p.history) for p in players), default=0)
-        
         highest_allowed = max_round + 1
 
         print(f"\nAvailable Rounds: 1 to {highest_allowed} (Select {highest_allowed} to manually build a new round)")
@@ -291,8 +291,9 @@ def tournament_menu(tournament_name):
         print("1. Add a Player")
         print("2. Enter Match Result")
         print("3. Manage Data & Edit Rounds")
-        print("4. Generate HTML & Deploy to Web")
-        print("5. Exit to Tournament Selector")
+        print("4. Generate Pairings & Deploy (Next Round)")
+        print("5. 🛑 End Tournament / Re-Publish Final Results")
+        print("0. Exit to Tournament Selector")
         
         choice = input("Select an option: ")
         
@@ -343,31 +344,56 @@ def tournament_menu(tournament_name):
 
         elif choice == '4':
             if not players: continue
+            
             try:
                 round_num = int(input("Generating pairings for round #: "))
+            except ValueError:
+                print("❌ Invalid input. Please enter a valid round number.")
+                continue
                 
-                print("\nSelect Pairing System:")
-                print("1. Round Robin (Perfect rotation, no repeats)")
-                print("2. Swiss System (Rank-based, avoids repeats)")
-                print("3. King of the Hill (Strict 1v2, 3v4 - ignores repeats)")
-                sys_choice = input("Choice (1/2/3): ")
-                
-                if sys_choice == '1':
-                    pairing_sys = "rr"
-                elif sys_choice == '3':
-                    pairing_sys = "koh"
-                else:
-                    pairing_sys = "swiss"
-                
+            print("\nSelect Pairing System:")
+            print("1. Round Robin (Perfect rotation, no repeats)")
+            print("2. Swiss System (Rank-based, avoids repeats)")
+            print("3. King of the Hill (Strict 1v2, 3v4 - ignores repeats)")
+            sys_choice = input("Choice (1/2/3): ")
+            
+            if sys_choice == '1':
+                pairing_sys = "rr"
+            elif sys_choice == '3':
+                pairing_sys = "koh"
+            else:
+                pairing_sys = "swiss"
+            
+            try:
                 build_static_site(players, round_num, tournament_name, pairing_system=pairing_sys)
-                
                 deploy = input("\nDeploy to AWS S3? (y/n): ").lower()
                 if deploy == 'y':
                     deploy_to_s3(tournament_name)
-            except ValueError:
-                print("❌ Invalid input. Use numbers.")
+            except Exception as e:
+                print(f"\n❌ ENGINE ERROR ENCOUNTERED:")
+                traceback.print_exc()
+                print("-----------------------------\n")
                 
         elif choice == '5':
+            if not players:
+                print("❌ No players in tournament.")
+                continue
+                
+            confirm = input("\n⚠️ Are you sure you want to end the tournament and publish final results? (y/n): ")
+            if confirm.lower() == 'y':
+                max_round = max((len(p.history) for p in players), default=0)
+                print(f"\n🏆 Wrapping up Tournament at Round {max_round}...")
+                
+                try:
+                    build_static_site(players, max_round, tournament_name, pairing_system="final")
+                    deploy_to_s3(tournament_name)
+                    print("\n🎉 TOURNAMENT OFFICIALLY CONCLUDED AND PUBLISHED LIVE!")
+                except Exception as e:
+                    print(f"\n❌ ENGINE ERROR ENCOUNTERED:")
+                    traceback.print_exc()
+                    print("-----------------------------\n")
+                    
+        elif choice == '0':
             break
 
 def manage_tournaments_menu(tournaments):

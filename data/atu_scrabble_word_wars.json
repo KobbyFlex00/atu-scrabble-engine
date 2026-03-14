@@ -3,17 +3,16 @@
         "id": 1,
         "name": "AQUILA DELALI",
         "club": "ATU",
-        "rating": 0,
-        "wins": 9.0,
-        "spread": 1444,
-        "sos": 29.0,
+        "rating": 1200,
+        "wins": 6.0,
+        "spread": 1064,
+        "sos": 30.0,
+        "current_rating": 1290,
         "played_against": [
-            2,
-            3,
-            4,
-            5,
             6,
-            7
+            7,
+            3,
+            2
         ],
         "history": [
             {
@@ -23,28 +22,28 @@
                 "spread": 50
             },
             {
-                "opp_id": 2,
-                "opp_name": "STEPHEN APPIAH",
-                "result": "W",
-                "spread": 224
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
             },
             {
-                "opp_id": 3,
-                "opp_name": "GEORGE OSAE",
-                "result": "W",
-                "spread": 94
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
             },
             {
-                "opp_id": 4,
-                "opp_name": "PERPETUAL DOTSE",
-                "result": "W",
-                "spread": 62
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
             },
             {
-                "opp_id": 5,
-                "opp_name": "OLIVIA LARTEVI",
-                "result": "W",
-                "spread": 75
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
             },
             {
                 "opp_id": 6,
@@ -69,6 +68,12 @@
                 "opp_name": "STEPHEN APPIAH",
                 "result": "W",
                 "spread": 276
+            },
+            {
+                "opp_id": 3,
+                "opp_name": "GEORGE OSAE",
+                "result": "W",
+                "spread": 75
             }
         ],
         "has_had_bye": true
@@ -77,17 +82,18 @@
         "id": 2,
         "name": "STEPHEN APPIAH",
         "club": "ATU",
-        "rating": 0,
-        "wins": 6.0,
-        "spread": -28,
-        "sos": 31.0,
+        "rating": 1200,
+        "wins": 5.0,
+        "spread": -5,
+        "sos": 33.0,
+        "current_rating": 1237,
         "played_against": [
             7,
-            4,
             1,
             6,
             3,
-            5
+            5,
+            4
         ],
         "history": [
             {
@@ -100,13 +106,13 @@
                 "opp_id": 1,
                 "opp_name": "AQUILA DELALI",
                 "result": "L",
-                "spread": -224
+                "spread": -276
             },
             {
-                "opp_id": 4,
-                "opp_name": "PERPETUAL DOTSE",
-                "result": "W",
-                "spread": 172
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
             },
             {
                 "opp_id": 6,
@@ -124,7 +130,7 @@
                 "opp_id": 3,
                 "opp_name": "GEORGE OSAE",
                 "result": "L",
-                "spread": -32
+                "spread": -35
             },
             {
                 "opp_id": 5,
@@ -133,16 +139,22 @@
                 "spread": 244
             },
             {
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
+            },
+            {
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
+            },
+            {
                 "opp_id": 4,
                 "opp_name": "PERPETUAL DOTSE",
                 "result": "W",
-                "spread": 32
-            },
-            {
-                "opp_id": 1,
-                "opp_name": "AQUILA DELALI",
-                "result": "L",
-                "spread": -276
+                "spread": 6
             }
         ],
         "has_had_bye": true
@@ -151,16 +163,18 @@
         "id": 3,
         "name": "GEORGE OSAE",
         "club": "ATU",
-        "rating": 0,
+        "rating": 1200,
         "wins": 6.0,
-        "spread": 276,
-        "sos": 35.0,
+        "spread": 298,
+        "sos": 29.0,
+        "current_rating": 1221,
         "played_against": [
             6,
             1,
             5,
             7,
             2,
+            4,
             4
         ],
         "history": [
@@ -180,7 +194,7 @@
                 "opp_id": 1,
                 "opp_name": "AQUILA DELALI",
                 "result": "L",
-                "spread": -94
+                "spread": -181
             },
             {
                 "opp_id": 5,
@@ -198,7 +212,7 @@
                 "opp_id": 2,
                 "opp_name": "STEPHEN APPIAH",
                 "result": "W",
-                "spread": 32
+                "spread": 35
             },
             {
                 "opp_id": 4,
@@ -207,16 +221,28 @@
                 "spread": -59
             },
             {
-                "opp_id": 1,
-                "opp_name": "AQUILA DELALI",
-                "result": "L",
-                "spread": -181
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
             },
             {
                 "opp_id": 4,
                 "opp_name": "PERPETUAL DOTSE",
                 "result": "W",
                 "spread": 27
+            },
+            {
+                "opp_id": 1,
+                "opp_name": "AQUILA DELALI",
+                "result": "L",
+                "spread": -75
+            },
+            {
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
             }
         ],
         "has_had_bye": true
@@ -225,16 +251,17 @@
         "id": 4,
         "name": "PERPETUAL DOTSE",
         "club": "ATU",
-        "rating": 0,
+        "rating": 1200,
         "wins": 5.0,
-        "spread": 58,
-        "sos": 33.0,
+        "spread": 219,
+        "sos": 29.0,
+        "current_rating": 1162,
         "played_against": [
             5,
             7,
-            2,
             1,
             6,
+            2,
             3
         ],
         "history": [
@@ -251,10 +278,10 @@
                 "spread": 103
             },
             {
-                "opp_id": 2,
-                "opp_name": "STEPHEN APPIAH",
-                "result": "L",
-                "spread": -172
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
             },
             {
                 "opp_id": 1,
@@ -275,10 +302,10 @@
                 "spread": 50
             },
             {
-                "opp_id": 3,
-                "opp_name": "GEORGE OSAE",
-                "result": "W",
-                "spread": 59
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
             },
             {
                 "opp_id": 2,
@@ -289,8 +316,14 @@
             {
                 "opp_id": 3,
                 "opp_name": "GEORGE OSAE",
+                "result": "W",
+                "spread": 27
+            },
+            {
+                "opp_id": 2,
+                "opp_name": "STEPHEN APPIAH",
                 "result": "L",
-                "spread": -27
+                "spread": -6
             }
         ],
         "has_had_bye": true
@@ -299,15 +332,18 @@
         "id": 5,
         "name": "OLIVIA LARTEVI",
         "club": "ATU",
-        "rating": 0,
-        "wins": 3.0,
-        "spread": -454,
-        "sos": 32.0,
+        "rating": 1200,
+        "wins": 4.0,
+        "spread": -287,
+        "sos": 36.0,
+        "current_rating": 1163,
         "played_against": [
             4,
             6,
             3,
             1,
+            7,
+            7,
             7,
             2
         ],
@@ -358,13 +394,19 @@
                 "opp_id": 7,
                 "opp_name": "THOMAS QUARCOO",
                 "result": "W",
-                "spread": 111
+                "spread": 172
             },
             {
                 "opp_id": 7,
                 "opp_name": "THOMAS QUARCOO",
                 "result": "L",
-                "spread": -109
+                "spread": -53
+            },
+            {
+                "opp_id": 0,
+                "opp_name": "BYE",
+                "result": "W",
+                "spread": 50
             }
         ],
         "has_had_bye": true
@@ -373,10 +415,11 @@
         "id": 6,
         "name": "JUSTICE BONUEDIE",
         "club": "ATU",
-        "rating": 0,
-        "wins": 3.0,
-        "spread": -385,
-        "sos": 30.0,
+        "rating": 1200,
+        "wins": 4.0,
+        "spread": -335,
+        "sos": 37.0,
+        "current_rating": 1136,
         "played_against": [
             3,
             5,
@@ -447,17 +490,20 @@
         "id": 7,
         "name": "THOMAS QUARCOO",
         "club": "ATU",
-        "rating": 0,
+        "rating": 1200,
         "wins": 4.0,
-        "spread": -461,
-        "sos": 32.0,
+        "spread": -487,
+        "sos": 35.0,
+        "current_rating": 1191,
         "played_against": [
             2,
             4,
-            6,
             3,
             5,
-            1
+            1,
+            5,
+            5,
+            6
         ],
         "history": [
             {
@@ -473,10 +519,10 @@
                 "spread": -103
             },
             {
-                "opp_id": 6,
-                "opp_name": "JUSTICE BONUEDIE",
-                "result": "W",
-                "spread": 76
+                "opp_id": -1,
+                "opp_name": "NONE",
+                "result": "-",
+                "spread": 0
             },
             {
                 "opp_id": 0,
@@ -506,13 +552,19 @@
                 "opp_id": 5,
                 "opp_name": "OLIVIA LARTEVI",
                 "result": "L",
-                "spread": -111
+                "spread": -172
             },
             {
                 "opp_id": 5,
                 "opp_name": "OLIVIA LARTEVI",
                 "result": "W",
-                "spread": 109
+                "spread": 53
+            },
+            {
+                "opp_id": 6,
+                "opp_name": "JUSTICE BONUEDIE",
+                "result": "W",
+                "spread": 167
             }
         ],
         "has_had_bye": true

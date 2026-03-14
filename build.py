@@ -15,7 +15,7 @@ def build_static_site(players, current_round, tournament_name, pairing_system="s
     # 1. Generate Standings
     standings_template = env.get_template('standings.html')
     standings_html = standings_template.render(players=sorted_players, tournament_name=tournament_name)
-    with open(os.path.join(out_dir, 'index.html'), 'w') as f:
+    with open(os.path.join(out_dir, 'index.html'), 'w', encoding='utf-8') as f:
         f.write(standings_html)
 
     # 2. Generate Pairings based on the chosen system
@@ -23,27 +23,36 @@ def build_static_site(players, current_round, tournament_name, pairing_system="s
         round_pairings = generate_round_robin_pairings(players, round_num=current_round)
     elif pairing_system == "koh":
         round_pairings = generate_koh_pairings(players, round_num=current_round)
+    elif pairing_system == "final":
+        round_pairings = []  # No new pairings needed, the tournament is over!
     else:
         round_pairings = generate_swiss_pairings(players, round_num=current_round)
         
     pairings_template = env.get_template('pairings.html')
-    pairings_html = pairings_template.render(matches=round_pairings, round_num=current_round, tournament_name=tournament_name)
-    with open(os.path.join(out_dir, 'pairings.html'), 'w') as f:
+    display_round = "FINAL" if pairing_system == "final" else current_round
+    pairings_html = pairings_template.render(matches=round_pairings, round_num=display_round, tournament_name=tournament_name)
+    with open(os.path.join(out_dir, 'pairings.html'), 'w', encoding='utf-8') as f:
         f.write(pairings_html)
         
     # 3. Generate Wallchart
     max_rounds = max((len(p.history) for p in players), default=0)
     wallchart_template = env.get_template('wallchart.html')
     wallchart_html = wallchart_template.render(players=sorted_players, max_rounds=max_rounds, tournament_name=tournament_name)
-    with open(os.path.join(out_dir, 'wallchart.html'), 'w') as f:
+    with open(os.path.join(out_dir, 'wallchart.html'), 'w', encoding='utf-8') as f:
         f.write(wallchart_html)
 
     # 4. Generate Team Standings
     team_standings = calculate_team_standings(players)
     teams_template = env.get_template('teams.html')
     teams_html = teams_template.render(teams=team_standings, tournament_name=tournament_name)
-    with open(os.path.join(out_dir, 'teams.html'), 'w') as f:
+    with open(os.path.join(out_dir, 'teams.html'), 'w', encoding='utf-8') as f:
         f.write(teams_html)
+        
+    # 5. Generate Player Profiles
+    players_template = env.get_template('players.html')
+    players_html = players_template.render(players=sorted_players, tournament_name=tournament_name)
+    with open(os.path.join(out_dir, 'players.html'), 'w', encoding='utf-8') as f:
+        f.write(players_html)
         
     print(f"\n✅ Build complete! Static files for {tournament_name} saved in {out_dir}/")
 
@@ -63,7 +72,7 @@ def build_master_portal(tournament_names):
     template = env.get_template('portal.html')
     html = template.render(tournaments=tournaments)
     
-    with open(os.path.join('output', 'index.html'), 'w') as f:
+    with open(os.path.join('output', 'index.html'), 'w', encoding='utf-8') as f:
         f.write(html)
         
     print("✅ Master Portal built at output/index.html")
