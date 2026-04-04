@@ -40,6 +40,7 @@
                     <th>Rank</th>
                     <th style="text-align: left;">Team / Club</th>
                     <th>Total Wins</th>
+                    <th>Total Losses</th>
                     <th>Total Spread</th>
                 </tr>
             </thead>
@@ -48,7 +49,8 @@
                 <tr>
                     <td class="rank">{{ loop.index }}</td>
                     <td class="team-name">{{ team.name }}</td>
-                    <td><strong>{{ team.wins }}</strong></td>
+                    <td style="color: #27ae60;"><strong>{{ team.wins }}</strong></td>
+                    <td style="color: #e74c3c;"><strong>{{ team.losses }}</strong></td>
                     <td>{{ team.spread }}</td>
                 </tr>
                 {% endfor %}

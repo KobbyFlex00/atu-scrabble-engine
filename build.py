@@ -1,6 +1,6 @@
 import os
 from jinja2 import Environment, FileSystemLoader
-from core.pairing import generate_swiss_pairings, generate_round_robin_pairings, generate_koh_pairings
+from core.pairing import generate_swiss_pairings, generate_round_robin_pairings, generate_koh_pairings, generate_double_round_robin_pairings
 from core.standings import calculate_sos_and_sort, calculate_team_standings
 
 def build_static_site(players, current_round, tournament_name, pairing_system="swiss"):
@@ -21,10 +21,12 @@ def build_static_site(players, current_round, tournament_name, pairing_system="s
     # 2. Generate Pairings based on the chosen system
     if pairing_system == "rr":
         round_pairings = generate_round_robin_pairings(players, round_num=current_round)
+    elif pairing_system == "double_rr":
+        round_pairings = generate_double_round_robin_pairings(players, round_num=current_round)
     elif pairing_system == "koh":
         round_pairings = generate_koh_pairings(players, round_num=current_round)
     elif pairing_system == "final":
-        round_pairings = []  # No new pairings needed, the tournament is over!
+        round_pairings = []  
     else:
         round_pairings = generate_swiss_pairings(players, round_num=current_round)
         
@@ -57,7 +59,6 @@ def build_static_site(players, current_round, tournament_name, pairing_system="s
     print(f"\n✅ Build complete! Static files for {tournament_name} saved in {out_dir}/")
 
 def build_master_portal(tournament_names):
-    """Generates the root index.html lobby linking to all active tournaments."""
     env = Environment(loader=FileSystemLoader('templates'))
     os.makedirs('output', exist_ok=True)
     

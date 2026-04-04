@@ -71,9 +71,13 @@ def calculate_team_standings(players: list[Player]) -> list[dict]:
     teams = {}
     for p in players:
         if p.club not in teams:
-            teams[p.club] = {'wins': 0, 'spread': 0}
+            teams[p.club] = {'wins': 0, 'losses': 0, 'spread': 0}
+            
         teams[p.club]['wins'] += p.wins
+        teams[p.club]['losses'] += p.losses
         teams[p.club]['spread'] += p.spread
         
-    team_list = [{'name': k, 'wins': v['wins'], 'spread': v['spread']} for k, v in teams.items()]
-    return sorted(team_list, key=lambda t: (t['wins'], t['spread']), reverse=True)
+    team_list = [{'name': k, 'wins': v['wins'], 'losses': v['losses'], 'spread': v['spread']} for k, v in teams.items()]
+    
+    # Sort by Most Wins -> Highest Spread -> Fewest Losses
+    return sorted(team_list, key=lambda t: (t['wins'], t['spread'], -t['losses']), reverse=True)

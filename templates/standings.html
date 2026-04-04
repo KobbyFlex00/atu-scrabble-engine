@@ -45,6 +45,7 @@
                     <th>Initial Rating</th>
                     <th>Current Rating</th>
                     <th>Wins</th>
+                    <th>Losses</th>
                     <th>Spread</th>
                     <th>SOS</th>
                 </tr>
@@ -57,7 +58,8 @@
                     <td>{{ player.club }}</td>
                     <td class="initial-rating">{{ player.rating }}</td>
                     <td class="current-rating"><strong>{{ player.current_rating }}</strong></td>
-                    <td><strong>{{ player.wins }}</strong></td>
+                    <td style="color: #27ae60;"><strong>{{ player.wins }}</strong></td>
+                    <td style="color: #e74c3c;"><strong>{{ player.losses }}</strong></td>
                     <td>{{ player.spread }}</td>
                     <td>{{ player.sos }}</td>
                 </tr>

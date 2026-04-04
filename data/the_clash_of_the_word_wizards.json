@@ -1,0 +1,538 @@
+[
+    {
+        "id": 1,
+        "name": "Aquila",
+        "club": "ATU",
+        "rating": 1200,
+        "wins": 8.0,
+        "spread": 957,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [
+            5,
+            7,
+            6,
+            8
+        ],
+        "history": [
+            {
+                "opp_id": 5,
+                "opp_name": "Michael",
+                "result": "W",
+                "spread": 109
+            },
+            {
+                "opp_id": 7,
+                "opp_name": "Jamilu",
+                "result": "W",
+                "spread": 218
+            },
+            {
+                "opp_id": 6,
+                "opp_name": "Reuben",
+                "result": "W",
+                "spread": 24
+            },
+            {
+                "opp_id": 8,
+                "opp_name": "Kelvin",
+                "result": "W",
+                "spread": 168
+            },
+            {
+                "opp_id": 5,
+                "opp_name": "Michael",
+                "result": "W",
+                "spread": 96
+            },
+            {
+                "opp_id": 7,
+                "opp_name": "Jamilu",
+                "result": "W",
+                "spread": 175
+            },
+            {
+                "opp_id": 6,
+                "opp_name": "Reuben",
+                "result": "W",
+                "spread": 54
+            },
+            {
+                "opp_id": 8,
+                "opp_name": "Kelvin",
+                "result": "W",
+                "spread": 113
+            }
+        ],
+        "has_had_bye": false
+    },
+    {
+        "id": 2,
+        "name": "Stephen",
+        "club": "ATU",
+        "rating": 1200,
+        "wins": 5.0,
+        "spread": 190,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [
+            6,
+            8,
+            5,
+            7
+        ],
+        "history": [
+            {
+                "opp_id": 6,
+                "opp_name": "Reuben",
+                "result": "L",
+                "spread": -103
+            },
+            {
+                "opp_id": 8,
+                "opp_name": "Kelvin",
+                "result": "W",
+                "spread": 208
+            },
+            {
+                "opp_id": 5,
+                "opp_name": "Michael",
+                "result": "L",
+                "spread": -209
+            },
+            {
+                "opp_id": 7,
+                "opp_name": "Jamilu",
+                "result": "W",
+                "spread": 3
+            },
+            {
+                "opp_id": 6,
+                "opp_name": "Reuben",
+                "result": "L",
+                "spread": -46
+            },
+            {
+                "opp_id": 8,
+                "opp_name": "Kelvin",
+                "result": "W",
+                "spread": 114
+            },
+            {
+                "opp_id": 5,
+                "opp_name": "Michael",
+                "result": "W",
+                "spread": 104
+            },
+            {
+                "opp_id": 7,
+                "opp_name": "Jamilu",
+                "result": "W",
+                "spread": 119
+            }
+        ],
+        "has_had_bye": false
+    },
+    {
+        "id": 3,
+        "name": "Perpetual",
+        "club": "ATU",
+        "rating": 1200,
+        "wins": 4.0,
+        "spread": -96,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [
+            7,
+            6,
+            8,
+            5
+        ],
+        "history": [
+            {
+                "opp_id": 7,
+                "opp_name": "Jamilu",
+                "result": "L",
+                "spread": -105
+            },
+            {
+                "opp_id": 6,
+                "opp_name": "Reuben",
+                "result": "W",
+                "spread": 18
+            },
+            {
+                "opp_id": 8,
+                "opp_name": "Kelvin",
+                "result": "W",
+                "spread": 60
+            },
+            {
+                "opp_id": 5,
+                "opp_name": "Michael",
+                "result": "L",
+                "spread": -157
+            },
+            {
+                "opp_id": 7,
+                "opp_name": "Jamilu",
+                "result": "W",
+                "spread": 71
+            },
+            {
+                "opp_id": 6,
+                "opp_name": "Reuben",
+                "result": "L",
+                "spread": -2
+            },
+            {
+                "opp_id": 8,
+                "opp_name": "Kelvin",
+                "result": "W",
+                "spread": 56
+            },
+            {
+                "opp_id": 5,
+                "opp_name": "Michael",
+                "result": "L",
+                "spread": -37
+            }
+        ],
+        "has_had_bye": false
+    },
+    {
+        "id": 4,
+        "name": "George",
+        "club": "ATU",
+        "rating": 1200,
+        "wins": 4.0,
+        "spread": -214,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [
+            8,
+            5,
+            7,
+            6
+        ],
+        "history": [
+            {
+                "opp_id": 8,
+                "opp_name": "Kelvin",
+                "result": "W",
+                "spread": 115
+            },
+            {
+                "opp_id": 5,
+                "opp_name": "Michael",
+                "result": "L",
+                "spread": -183
+            },
+            {
+                "opp_id": 7,
+                "opp_name": "Jamilu",
+                "result": "W",
+                "spread": 20
+            },
+            {
+                "opp_id": 6,
+                "opp_name": "Reuben",
+                "result": "L",
+                "spread": -44
+            },
+            {
+                "opp_id": 8,
+                "opp_name": "Kelvin",
+                "result": "L",
+                "spread": -93
+            },
+            {
+                "opp_id": 5,
+                "opp_name": "Michael",
+                "result": "L",
+                "spread": -40
+            },
+            {
+                "opp_id": 7,
+                "opp_name": "Jamilu",
+                "result": "W",
+                "spread": 6
+            },
+            {
+                "opp_id": 6,
+                "opp_name": "Reuben",
+                "result": "W",
+                "spread": 5
+            }
+        ],
+        "has_had_bye": false
+    },
+    {
+        "id": 5,
+        "name": "Michael",
+        "club": "ANTSC",
+        "rating": 1200,
+        "wins": 5.0,
+        "spread": 317,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [
+            1,
+            4,
+            2,
+            3
+        ],
+        "history": [
+            {
+                "opp_id": 1,
+                "opp_name": "Aquila",
+                "result": "L",
+                "spread": -109
+            },
+            {
+                "opp_id": 4,
+                "opp_name": "George",
+                "result": "W",
+                "spread": 183
+            },
+            {
+                "opp_id": 2,
+                "opp_name": "Stephen",
+                "result": "W",
+                "spread": 209
+            },
+            {
+                "opp_id": 3,
+                "opp_name": "Perpetual",
+                "result": "W",
+                "spread": 157
+            },
+            {
+                "opp_id": 1,
+                "opp_name": "Aquila",
+                "result": "L",
+                "spread": -96
+            },
+            {
+                "opp_id": 4,
+                "opp_name": "George",
+                "result": "W",
+                "spread": 40
+            },
+            {
+                "opp_id": 2,
+                "opp_name": "Stephen",
+                "result": "L",
+                "spread": -104
+            },
+            {
+                "opp_id": 3,
+                "opp_name": "Perpetual",
+                "result": "W",
+                "spread": 37
+            }
+        ],
+        "has_had_bye": false
+    },
+    {
+        "id": 6,
+        "name": "Reuben",
+        "club": "ANTSC",
+        "rating": 1200,
+        "wins": 4.0,
+        "spread": 94,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [
+            2,
+            3,
+            1,
+            4
+        ],
+        "history": [
+            {
+                "opp_id": 2,
+                "opp_name": "Stephen",
+                "result": "W",
+                "spread": 103
+            },
+            {
+                "opp_id": 3,
+                "opp_name": "Perpetual",
+                "result": "L",
+                "spread": -18
+            },
+            {
+                "opp_id": 1,
+                "opp_name": "Aquila",
+                "result": "L",
+                "spread": -24
+            },
+            {
+                "opp_id": 4,
+                "opp_name": "George",
+                "result": "W",
+                "spread": 44
+            },
+            {
+                "opp_id": 2,
+                "opp_name": "Stephen",
+                "result": "W",
+                "spread": 46
+            },
+            {
+                "opp_id": 3,
+                "opp_name": "Perpetual",
+                "result": "W",
+                "spread": 2
+            },
+            {
+                "opp_id": 1,
+                "opp_name": "Aquila",
+                "result": "L",
+                "spread": -54
+            },
+            {
+                "opp_id": 4,
+                "opp_name": "George",
+                "result": "L",
+                "spread": -5
+            }
+        ],
+        "has_had_bye": false
+    },
+    {
+        "id": 7,
+        "name": "Jamilu",
+        "club": "ANTSC",
+        "rating": 1200,
+        "wins": 1.0,
+        "spread": -507,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [
+            3,
+            1,
+            4,
+            2
+        ],
+        "history": [
+            {
+                "opp_id": 3,
+                "opp_name": "Perpetual",
+                "result": "W",
+                "spread": 105
+            },
+            {
+                "opp_id": 1,
+                "opp_name": "Aquila",
+                "result": "L",
+                "spread": -218
+            },
+            {
+                "opp_id": 4,
+                "opp_name": "George",
+                "result": "L",
+                "spread": -20
+            },
+            {
+                "opp_id": 2,
+                "opp_name": "Stephen",
+                "result": "L",
+                "spread": -3
+            },
+            {
+                "opp_id": 3,
+                "opp_name": "Perpetual",
+                "result": "L",
+                "spread": -71
+            },
+            {
+                "opp_id": 1,
+                "opp_name": "Aquila",
+                "result": "L",
+                "spread": -175
+            },
+            {
+                "opp_id": 4,
+                "opp_name": "George",
+                "result": "L",
+                "spread": -6
+            },
+            {
+                "opp_id": 2,
+                "opp_name": "Stephen",
+                "result": "L",
+                "spread": -119
+            }
+        ],
+        "has_had_bye": false
+    },
+    {
+        "id": 8,
+        "name": "Kelvin",
+        "club": "ANTSC",
+        "rating": 1200,
+        "wins": 1.0,
+        "spread": -741,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [
+            4,
+            2,
+            3,
+            1
+        ],
+        "history": [
+            {
+                "opp_id": 4,
+                "opp_name": "George",
+                "result": "L",
+                "spread": -115
+            },
+            {
+                "opp_id": 2,
+                "opp_name": "Stephen",
+                "result": "L",
+                "spread": -208
+            },
+            {
+                "opp_id": 3,
+                "opp_name": "Perpetual",
+                "result": "L",
+                "spread": -60
+            },
+            {
+                "opp_id": 1,
+                "opp_name": "Aquila",
+                "result": "L",
+                "spread": -168
+            },
+            {
+                "opp_id": 4,
+                "opp_name": "George",
+                "result": "W",
+                "spread": 93
+            },
+            {
+                "opp_id": 2,
+                "opp_name": "Stephen",
+                "result": "L",
+                "spread": -114
+            },
+            {
+                "opp_id": 3,
+                "opp_name": "Perpetual",
+                "result": "L",
+                "spread": -56
+            },
+            {
+                "opp_id": 1,
+                "opp_name": "Aquila",
+                "result": "L",
+                "spread": -113
+            }
+        ],
+        "has_had_bye": false
+    }
+]

@@ -15,6 +15,12 @@ class Player:
     history: List[dict] = field(default_factory=list) 
     has_had_bye: bool = False  
     
+    @property
+    def losses(self) -> float:
+        """Dynamically calculates losses to ensure perfect math without bloating the database."""
+        total_played = sum(1 for m in self.history if m['opp_id'] != -1)
+        return total_played - self.wins
+
     def _pad_history(self, round_idx: int):
         """Ensures the history array reaches the target round to prevent shifting."""
         while len(self.history) <= round_idx:
@@ -100,7 +106,6 @@ class Player:
             data['current_rating'] = data.get('rating', 0)
         return cls(**data)
 
-# --- This is the class that was accidentally cut off! ---
 @dataclass
 class Match:
     round_num: int
