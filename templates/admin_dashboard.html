@@ -32,10 +32,12 @@
         button.edit { background: #8e44ad; }
         button.insert { background: #f39c12; }
         button.deploy { background: #e74c3c; }
+        button.manage { background: #3498db; }
         button:hover { opacity: 0.9; }
 
         .alert { padding: 15px; margin-bottom: 20px; border-radius: 4px; font-weight: bold; }
         .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;}
+        .alert-warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba;}
         .alert-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;}
 
         .history-section { margin-top: 40px; }
@@ -51,6 +53,7 @@
     <div class="sidebar">
         <h2>🛠️ TD Control</h2>
         <a onclick="showTab('overview')" id="nav-overview">📊 Live Overview</a>
+        <a onclick="showTab('players')" id="nav-players">👥 Manage Players</a>
         <a onclick="showTab('scores')" id="nav-scores">➕ Enter Scores</a>
         <a onclick="showTab('edit')" id="nav-edit">✏️ Edit/Fix Matches</a>
         <a onclick="showTab('deploy')" id="nav-deploy">🚀 Build & Deploy</a>
@@ -103,6 +106,57 @@
             {% else %}
                 <p style="color: #7f8c8d; font-style: italic; background: white; padding: 20px; border-radius: 8px;">No matches recorded yet. Go to 'Enter Scores' to begin!</p>
             {% endif %}
+        </div>
+
+        <div id="tab-players" class="tab-content">
+            <div class="card">
+                <h3>➕ Add New Player</h3>
+                <form action="{{ url_for('add_player', name=tournament_name) }}" method="POST">
+                    <label>Player Name:</label>
+                    <input type="text" name="name" required placeholder="e.g. GEORGE OSAE">
+                    
+                    <label>Club / University (For Team Standings):</label>
+                    <input type="text" name="club" required placeholder="e.g. ATU">
+                    
+                    <label>Initial Rating (Base Elo):</label>
+                    <input type="number" name="rating" value="1200" required>
+                    
+                    <button type="submit" class="manage">Add Player to Roster</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>✏️ Edit or Delete Player</h3>
+                <form action="{{ url_for('manage_player', name=tournament_name) }}" method="POST">
+                    <label>Action:</label>
+                    <select name="action" id="player-action-select" required onchange="togglePlayerEditFields()">
+                        <option value="edit">✏️ Edit Details (Name, Club, Rating)</option>
+                        <option value="delete">🗑️ Delete Player Completely</option>
+                    </select>
+
+                    <label>Select Player:</label>
+                    <select name="player_id" id="edit-player-select" required onchange="populatePlayerFields()">
+                        <option value="" disabled selected>Select a player...</option>
+                        {% for p in players|sort(attribute='name') %}
+                            <option value="{{ p.id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div id="player-edit-fields">
+                        <hr style="margin-top:20px; border: 0; border-top: 1px solid #eee;">
+                        <label>Updated Name:</label>
+                        <input type="text" name="new_name" id="edit-player-name">
+
+                        <label>Updated Club:</label>
+                        <input type="text" name="new_club" id="edit-player-club">
+
+                        <label>Updated Initial Rating:</label>
+                        <input type="number" name="new_rating" id="edit-player-rating">
+                    </div>
+
+                    <button type="submit" class="edit">Apply Player Changes</button>
+                </form>
+            </div>
         </div>
 
         <div id="tab-scores" class="tab-content">
@@ -232,6 +286,7 @@
 
     <script>
         const matchesData = {{ rounds_json | safe }};
+        const playersData = {{ players_json | safe }};
 
         function showTab(tabId) {
             var contents = document.getElementsByClassName('tab-content');
@@ -246,6 +301,7 @@
             document.getElementById('nav-' + tabId).classList.add('active');
         }
 
+        // Match Management Logic
         function updateMatchDropdown() {
             const roundNum = document.getElementById('edit-round-input').value;
             const select = document.getElementById('match-select');
@@ -292,8 +348,34 @@
             }
         }
 
+        // Player Management Logic
+        function populatePlayerFields() {
+            const select = document.getElementById('edit-player-select');
+            const playerId = parseInt(select.value);
+            const player = playersData.find(p => p.id === playerId);
+            
+            if (player) {
+                document.getElementById('edit-player-name').value = player.name;
+                document.getElementById('edit-player-club').value = player.club;
+                document.getElementById('edit-player-rating').value = player.rating;
+            }
+        }
+
+        function togglePlayerEditFields() {
+            var action = document.getElementById('player-action-select').value;
+            var fields = document.getElementById('player-edit-fields');
+            
+            if (action === 'delete') {
+                fields.style.display = 'none';
+            } else {
+                fields.style.display = 'block';
+            }
+        }
+
+        // Initialize UI
         showTab('{{ active_tab }}');
         toggleEditFields();
+        togglePlayerEditFields();
     </script>
 </body>
 </html>

@@ -41,7 +41,6 @@ def get_matches_by_round(players):
     return rounds
 
 def get_matches_for_ui(players):
-    """Packages all matches into a JSON-friendly format so the Dropdown menu can update instantly."""
     max_round = max((len(p.history) for p in players), default=0)
     rounds_data = {}
     for r in range(max_round):
@@ -79,7 +78,62 @@ def tournament_dashboard(name):
     max_round = max((len(p.history) for p in players), default=0)
     history = get_matches_by_round(players)
     rounds_json = get_matches_for_ui(players)
-    return render_template('admin_dashboard.html', tournament_name=name, players=players, max_round=max_round, history=history, rounds_json=rounds_json, active_tab=active_tab)
+    
+    # Pass player data for the new edit forms
+    players_data = [{'id': p.id, 'name': p.name, 'club': p.club, 'rating': p.rating} for p in players]
+    players_json = json.dumps(players_data)
+    
+    return render_template('admin_dashboard.html', tournament_name=name, players=players, max_round=max_round, history=history, rounds_json=rounds_json, players_json=players_json, active_tab=active_tab)
+
+# --- PLAYER MANAGEMENT ROUTES ---
+
+@app.route('/tournament/<name>/add_player', methods=['POST'])
+def add_player(name):
+    players = load_players(name)
+    new_name = request.form.get('name').strip().upper()
+    new_club = request.form.get('club').strip().upper()
+    new_rating = int(request.form.get('rating', 1200))
+
+    new_id = max([p.id for p in players], default=0) + 1
+    new_p = Player(id=new_id, name=new_name, club=new_club, rating=new_rating, current_rating=new_rating)
+    
+    players.append(new_p)
+    save_players(players, name)
+    flash(f"✅ Added {new_p.name} to the tournament!", "success")
+    return redirect(url_for('tournament_dashboard', name=name, tab='players'))
+
+@app.route('/tournament/<name>/manage_player', methods=['POST'])
+def manage_player(name):
+    players = load_players(name)
+    action = request.form.get('action')
+    player_id = int(request.form.get('player_id'))
+
+    player = next((p for p in players if p.id == player_id), None)
+    if not player:
+        flash("❌ Player not found.", "danger")
+        return redirect(url_for('tournament_dashboard', name=name, tab='players'))
+
+    if action == 'edit':
+        player.name = request.form.get('new_name', player.name).strip().upper()
+        player.club = request.form.get('new_club', player.club).strip().upper()
+        new_rating = request.form.get('new_rating')
+        if new_rating:
+            player.rating = int(new_rating)
+            # current_rating will safely update the next time standings are built
+        flash(f"✅ Player {player.name} updated successfully.", "success")
+        
+    elif action == 'delete':
+        has_matches = any(m['opp_id'] != -1 for m in player.history)
+        if has_matches:
+            flash(f"⚠️ Warning: Deleted {player.name}, but they had recorded matches. You may need to edit their opponents' histories.", "warning")
+        else:
+            flash(f"✅ Player {player.name} completely removed.", "success")
+        players = [p for p in players if p.id != player_id]
+
+    save_players(players, name)
+    return redirect(url_for('tournament_dashboard', name=name, tab='players'))
+
+# --- SCORE & MATCH MANAGEMENT ROUTES ---
 
 @app.route('/tournament/<name>/add_match', methods=['POST'])
 def add_match(name):
@@ -161,12 +215,10 @@ def manage_match(name):
         new_res = request.form.get('new_res')
         new_spread = int(request.form.get('new_spread', 0))
         
-        # 1. Safely Delete the bad match
         removed_opp_id = p1.remove_match_safely(round_idx, p2_id)
         if removed_opp_id is not None and p2:
             p2.remove_match_safely(round_idx, p1_id)
         
-        # 2. Wedge the correct match directly into that same round slot
         if new_opp_id == 0:
             p1.insert_bye(round_idx)
         else:
@@ -215,6 +267,8 @@ def insert_match(name):
 
     return redirect(url_for('tournament_dashboard', name=name, tab='scores'))
 
+# --- BUILD & DEPLOY ROUTE ---
+
 @app.route('/tournament/<name>/build_deploy', methods=['POST'])
 def build_deploy(name):
     players = load_players(name)
@@ -222,8 +276,15 @@ def build_deploy(name):
     pairing_sys = request.form.get('pairing_sys')
     
     try:
+        # 1. Build and deploy the specific tournament
         build_static_site(players, round_num, name, pairing_system=pairing_sys)
         deploy_to_s3(name)
+        
+        # 2. Automatically rebuild and deploy the Master Portal Lobby!
+        all_tournaments = get_tournaments()
+        build_master_portal(all_tournaments)
+        deploy_master_portal()
+        
         flash(f"🚀 {name} Round {round_num} successfully built and deployed to AWS!", "success")
     except Exception as e:
         print(traceback.format_exc())

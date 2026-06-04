@@ -1,0 +1,93 @@
+[
+    {
+        "id": 1,
+        "name": "AQUILA DELALI KLU",
+        "club": "ATU",
+        "rating": 1281,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    },
+    {
+        "id": 2,
+        "name": "GEORGE KOBBY OSAE",
+        "club": "ATU",
+        "rating": 1211,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    },
+    {
+        "id": 3,
+        "name": "PERPETUAL EYRAM DOTSE",
+        "club": "ATU",
+        "rating": 1189,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    },
+    {
+        "id": 4,
+        "name": "STEPHEN APPIAH",
+        "club": "ATU",
+        "rating": 1229,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    },
+    {
+        "id": 5,
+        "name": "THOMAS QUARCOO",
+        "club": "ATU",
+        "rating": 1191,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    },
+    {
+        "id": 6,
+        "name": "OLIVIA LARTEVI",
+        "club": "ATU",
+        "rating": 1163,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    },
+    {
+        "id": 7,
+        "name": "JUSTICE BONUEDIE",
+        "club": "ATU",
+        "rating": 1136,
+        "wins": 0.0,
+        "spread": 0,
+        "sos": 0.0,
+        "current_rating": 0,
+        "played_against": [],
+        "history": [],
+        "has_had_bye": false
+    }
+]
