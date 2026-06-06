@@ -26,7 +26,7 @@
         .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 25px;}
         .card h3 { margin-top: 0; color: #34495e; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;}
         label { font-weight: bold; display: block; margin-top: 15px; font-size: 0.9em; color: #555;}
-        select, input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 1em;}
+        select, input[type="text"], input[type="number"] { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 1em;}
         button { color: white; border: none; padding: 12px; width: 100%; margin-top: 20px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1.05em;}
         button.add { background: #27ae60; }
         button.edit { background: #8e44ad; }
@@ -46,6 +46,7 @@
         .round-table th { background: #34495e; color: white; }
         .res-W { color: #27ae60; font-weight: bold;}
         .res-L { color: #e74c3c; font-weight: bold;}
+        .res-D { color: #f39c12; font-weight: bold;}
     </style>
 </head>
 <body>
@@ -163,21 +164,28 @@
             <div class="card">
                 <h3>📝 Standard Score Entry</h3>
                 <form action="{{ url_for('add_match', name=tournament_name) }}" method="POST">
-                    <label>Winner:</label>
+                    <label>Player 1 (or Winner):</label>
                     <select name="winner_id" required>
-                        <option value="" disabled selected>Select Winner...</option>
+                        <option value="" disabled selected>Select Player...</option>
                         {% for p in players|sort(attribute='name') %}
                             <option value="{{ p.id }}">{{ p.name }}</option>
                         {% endfor %}
                     </select>
 
-                    <label>Loser (Select BYE for no opponent):</label>
+                    <label>Player 2 (or Loser. Select BYE for no opponent):</label>
                     <select name="loser_id" required>
                         <option value="0">--- BYE ---</option>
                         {% for p in players|sort(attribute='name') %}
                             <option value="{{ p.id }}">{{ p.name }}</option>
                         {% endfor %}
                     </select>
+                    
+                    <div style="margin-top: 15px; background: #fdfbf7; padding: 10px; border-left: 4px solid #f39c12; border-radius: 4px;">
+                        <label style="margin: 0; display: flex; align-items: center; gap: 8px; cursor: pointer; color: #d35400;">
+                            <input type="checkbox" name="is_draw" style="width: 20px; height: 20px; margin: 0;" onchange="this.form.spread.disabled = this.checked; if(this.checked) this.form.spread.value=0;">
+                            <span>🤝 <strong>Match is a Draw</strong> (Both players get 0.5 wins. Spread defaults to 0.)</span>
+                        </label>
+                    </div>
 
                     <label>Winning Spread (e.g., 45):</label>
                     <input type="number" name="spread" value="0" required>
@@ -191,21 +199,28 @@
                     <label>Insert Into Round #:</label>
                     <input type="number" name="round_num" min="1" max="{{ max_round + 1 if max_round else 1 }}" value="{{ max_round if max_round else 1 }}" required>
 
-                    <label>Winner:</label>
+                    <label>Player 1 (or Winner):</label>
                     <select name="winner_id" required>
-                        <option value="" disabled selected>Select Winner...</option>
+                        <option value="" disabled selected>Select Player...</option>
                         {% for p in players|sort(attribute='name') %}
                             <option value="{{ p.id }}">{{ p.name }}</option>
                         {% endfor %}
                     </select>
 
-                    <label>Loser:</label>
+                    <label>Player 2 (or Loser):</label>
                     <select name="loser_id" required>
                         <option value="0">--- BYE ---</option>
                         {% for p in players|sort(attribute='name') %}
                             <option value="{{ p.id }}">{{ p.name }}</option>
                         {% endfor %}
                     </select>
+                    
+                    <div style="margin-top: 15px; background: #fdfbf7; padding: 10px; border-left: 4px solid #f39c12; border-radius: 4px;">
+                        <label style="margin: 0; display: flex; align-items: center; gap: 8px; cursor: pointer; color: #d35400;">
+                            <input type="checkbox" name="is_draw" style="width: 20px; height: 20px; margin: 0;" onchange="this.form.spread.disabled = this.checked; if(this.checked) this.form.spread.value=0;">
+                            <span>🤝 <strong>Match is a Draw</strong> (Both players get 0.5 wins. Spread defaults to 0.)</span>
+                        </label>
+                    </div>
 
                     <label>Winning Spread:</label>
                     <input type="number" name="spread" value="0" required>

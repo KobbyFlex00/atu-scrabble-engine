@@ -79,7 +79,6 @@ def tournament_dashboard(name):
     history = get_matches_by_round(players)
     rounds_json = get_matches_for_ui(players)
     
-    # Pass player data for the new edit forms
     players_data = [{'id': p.id, 'name': p.name, 'club': p.club, 'rating': p.rating} for p in players]
     players_json = json.dumps(players_data)
     
@@ -119,7 +118,6 @@ def manage_player(name):
         new_rating = request.form.get('new_rating')
         if new_rating:
             player.rating = int(new_rating)
-            # current_rating will safely update the next time standings are built
         flash(f"✅ Player {player.name} updated successfully.", "success")
         
     elif action == 'delete':
@@ -141,7 +139,8 @@ def add_match(name):
     try:
         p1_id = int(request.form.get('winner_id'))
         p2_id = int(request.form.get('loser_id'))
-        spread = int(request.form.get('spread', 0))
+        is_draw = request.form.get('is_draw') == 'on'
+        spread = 0 if is_draw else int(request.form.get('spread', 0))
 
         if p2_id == 0:
             p1 = next((p for p in players if p.id == p1_id), None)
@@ -151,9 +150,14 @@ def add_match(name):
             p1 = next((p for p in players if p.id == p1_id), None)
             p2 = next((p for p in players if p.id == p2_id), None)
             if p1 and p2:
-                p1.add_result(p2.id, p2.name, True, False, spread)
-                p2.add_result(p1.id, p1.name, False, False, -spread)
-                flash(f"✅ Result added: {p1.name} beat {p2.name} by {spread}", "success")
+                if is_draw:
+                    p1.add_result(p2.id, p2.name, False, True, 0)
+                    p2.add_result(p1.id, p1.name, False, True, 0)
+                    flash(f"🤝 Draw added between {p1.name} and {p2.name}!", "success")
+                else:
+                    p1.add_result(p2.id, p2.name, True, False, spread)
+                    p2.add_result(p1.id, p1.name, False, False, -spread)
+                    flash(f"✅ Result added: {p1.name} beat {p2.name} by {spread}", "success")
             else:
                 flash("❌ Error: One or both players not found.", "danger")
                 
@@ -244,7 +248,8 @@ def insert_match(name):
         round_num = int(request.form.get('round_num'))
         p1_id = int(request.form.get('winner_id'))
         p2_id = int(request.form.get('loser_id'))
-        spread = int(request.form.get('spread', 0))
+        is_draw = request.form.get('is_draw') == 'on'
+        spread = 0 if is_draw else int(request.form.get('spread', 0))
         round_idx = round_num - 1
 
         p1 = next((p for p in players if p.id == p1_id), None)
@@ -256,18 +261,21 @@ def insert_match(name):
         else:
             p2 = next((p for p in players if p.id == p2_id), None)
             if p1 and p2:
-                p1.insert_result(round_idx, p2.id, p2.name, True, False, spread)
-                p2.insert_result(round_idx, p1.id, p1.name, False, False, -spread)
+                if is_draw:
+                    p1.insert_result(round_idx, p2.id, p2.name, False, True, 0)
+                    p2.insert_result(round_idx, p1.id, p1.name, False, True, 0)
+                    flash(f"🤝 Inserted: Draw between {p1.name} and {p2.name} exactly at Round {round_num}.", "success")
+                else:
+                    p1.insert_result(round_idx, p2.id, p2.name, True, False, spread)
+                    p2.insert_result(round_idx, p1.id, p1.name, False, False, -spread)
+                    flash(f"✅ Inserted: {p1.name} beat {p2.name} by {spread} exactly at Round {round_num}.", "success")
                 save_players(players, name)
-                flash(f"✅ Inserted: {p1.name} beat {p2.name} by {spread} exactly at Round {round_num}.", "success")
             else:
                 flash("❌ Players not found.", "danger")
     except Exception as e:
         flash(f"❌ Error inserting match: {e}", "danger")
 
     return redirect(url_for('tournament_dashboard', name=name, tab='scores'))
-
-# --- BUILD & DEPLOY ROUTE ---
 
 @app.route('/tournament/<name>/build_deploy', methods=['POST'])
 def build_deploy(name):
@@ -276,11 +284,9 @@ def build_deploy(name):
     pairing_sys = request.form.get('pairing_sys')
     
     try:
-        # 1. Build and deploy the specific tournament
         build_static_site(players, round_num, name, pairing_system=pairing_sys)
         deploy_to_s3(name)
         
-        # 2. Automatically rebuild and deploy the Master Portal Lobby!
         all_tournaments = get_tournaments()
         build_master_portal(all_tournaments)
         deploy_master_portal()
